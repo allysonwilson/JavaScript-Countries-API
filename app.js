@@ -74,7 +74,6 @@ var renderBordering = function(country){
   ul.appendChild(countryCapitalLi)
 }
 
-
 makeRequest( url )
 
 window.addEventListener("load", function() {
