@@ -29,6 +29,8 @@ var addCountriesToList = function( countries ) {
 
   })
   select.addEventListener("change", function () {
+  var div = document.getElementById('bordering')
+  div.innerHTML = " "
     var borders = []
     var country = countries[this.value]
     save(country)
@@ -40,8 +42,6 @@ var addCountriesToList = function( countries ) {
           }
         }
       }
-      var ul = document.getElementById("neighbours")
-      ul.innerHTML = "";
       for (bordering of borders) {
         renderBordering(bordering)
       }
@@ -60,9 +60,7 @@ var save = function (country) {
 }
 
 var renderBordering = function(country){
-  var ul = document.getElementById("neighbours")
-  // ul.innerHTML = "";
-  // ul.innerHTML = " "
+  var ul = document.createElement("ul")
   var countryNameLi = document.createElement("li")
   countryNameLi.innerText = "Name: " + country.name
   ul.appendChild(countryNameLi)
@@ -72,8 +70,10 @@ var renderBordering = function(country){
   var countryCapitalLi = document.createElement("li")
   countryCapitalLi.innerText = "Capital: " + country.capital
   ul.appendChild(countryCapitalLi)
-}
+  var div = document.getElementById('bordering')
+  div.appendChild(ul)
 
+}
 
 makeRequest( url )
 
