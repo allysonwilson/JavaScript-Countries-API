@@ -5,9 +5,18 @@ var makeRequest = function( url ) {
   request.open( "GET", url );
   request.addEventListener( "load", function() {
     var countries = JSON.parse( this.responseText )
-    addCountriesToList( countries )
+    addCountriesToList(countries)
   })
   request.send()
+}
+
+var render = function(country){
+  var countryName = document.getElementById("countryName")
+  countryName.innerText = "Name: " + country.name
+  var countryPop = document.getElementById("countryPop")
+  countryPop.innerText = "Population: " + country.population
+  var countryCapital = document.getElementById("countryCapital")
+  countryCapital.innerText = "Capital: " + country.capital
 }
 
 var addCountriesToList = function( countries ) {
@@ -20,19 +29,71 @@ var addCountriesToList = function( countries ) {
 
   })
   select.addEventListener("change", function () {
+    var borders = []
     var country = countries[this.value]
-    var countryName = document.getElementById("countryName")
-    countryName.innerText = "Name: " + country.name
-    var countryPop = document.getElementById("countryPop")
-    countryPop.innerText = "Population: " + country.population
-    var countryCapital = document.getElementById("countryCapital")
-    countryCapital.innerText = "Capital: " + country.capital
+    save(country)
+    render(country)
+      for (alphaCode of country.borders) {
+        for (country of countries) {
+          if (country.alpha3Code === alphaCode) {
+              borders.push(country)
+          }
+        }
+      }
+      var ul = document.getElementById("neighbours")
+      ul.innerHTML = "";
+      for (bordering of borders) {
+        renderBordering(bordering)
+      }
   })
+}
+
+var restore = function () {
+  var jsonString = localStorage.getItem("country")
+  var savedCountry = JSON.parse(jsonString)
+  return savedCountry
+}
+
+var save = function (country) {
+  var jsonString = JSON.stringify(country)
+  localStorage.setItem("country", jsonString)
+}
+
+var renderBordering = function(country){
+  var ul = document.getElementById("neighbours")
+  // ul.innerHTML = "";
+  // ul.innerHTML = " "
+  var countryNameLi = document.createElement("li")
+  countryNameLi.innerText = "Name: " + country.name
+  ul.appendChild(countryNameLi)
+  var countryPopLi = document.createElement("li")
+  countryPopLi.innerText = "Population: " + country.population
+  ul.appendChild(countryPopLi)
+  var countryCapitalLi = document.createElement("li")
+  countryCapitalLi.innerText = "Capital: " + country.capital
+  ul.appendChild(countryCapitalLi)
 }
 
 
 makeRequest( url )
 
+window.addEventListener("load", function() {
+  render(restore())
+})
+
+
+
+
+// var handleSelectChange = function () {
+//   var country = countries[this.value]
+//   save(country)
+//   var countryName = document.getElementById("countryName")
+//   countryName.innerText = "Name: " + country.name
+//   var countryPop = document.getElementById("countryPop")
+//   countryPop.innerText = "Population: " + country.population
+//   var countryCapital = document.getElementById("countryCapital")
+//   countryCapital.innerText = "Capital: " + country.capital
+// }
 
 // var handleSelectChange = function () {
 //   console.log(countries);
