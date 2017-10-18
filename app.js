@@ -29,6 +29,8 @@ var addCountriesToList = function( countries ) {
 
   })
   select.addEventListener("change", function () {
+  var div = document.getElementById('bordering')
+  div.innerHTML = " "
     var borders = []
     var country = countries[this.value]
     save(country)
